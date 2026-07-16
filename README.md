@@ -55,4 +55,4 @@ graph LR
 **Timing:** `bit_tick` is a pulse generated once every `TX_CLK_LIMIT` (434) clock cycles — i.e., once per bit period at 115200 baud. Since TX is the source of the signal it's generating, it doesn't need to measure or interpret anything external — `bit_tick` firing is simply "time to move to the next bit/state," and the FSM advances directly on that pulse.
 
 **`tx_busy`:** Asserted whenever the FSM is in `STATE_START`, `STATE_DATA`, or `STATE_STOP` — i.e., whenever a transmission is actively in progress, letting external logic know not to assert `tx_start` again until the current byte finishes.
-​```
+​
