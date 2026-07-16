@@ -75,6 +75,7 @@ module uart_rx #(
                         if (rx_serial) begin
                             rx_data <= rx_data_reg;
                             rx_ready <= 1'b1;
+                            current_state <= STATE_IDLE;
                         end
                         else current_state <= STATE_IDLE;
                     end
