@@ -2,22 +2,22 @@
 
 A UART (Universal Asynchronous Receiver-Transmitter) *loopback system* designed in verilog. This acts as a *hardware validation test*. This system receives Serial data at 115,200 baud, converts it to parallel data, and immediately echoes it back via the transmitter.
 
-​```mermaid
+```mermaid
 graph LR
     rx_pin([rx_pin]) -->|rx_serial| rx
     tx -->|tx_serial| tx_pin([tx_pin])
     subgraph top_module ["top_module.v / uart_loopback.v"]
         rx[uart_rx]
         tx[uart_tx]
-        rx -->|"w_data [7:0] (rx_data ──► tx_data)"| tx
-        rx -->|"w_ready (rx_ready ──► tx_start)"| tx
+        rx -->|"w_data (rx_data to tx_data)"| tx
+        rx -->|"w_ready (rx_ready to tx_start)"| tx
     end
     style rx fill:#e8f4fd,stroke:#1d8cf8,stroke-width:2px
     style tx fill:#fef3e9,stroke:#ff8d72,stroke-width:2px
     style top_module fill:#fdfdfd,stroke:#888,stroke-width:1px,stroke-dasharray: 5 5
     style rx_pin fill:#fff,stroke:#333,stroke-width:1.5px
     style tx_pin fill:#fff,stroke:#333,stroke-width:1.5px
-​```
+```
 
 ### Clock-to-Baud Math
 
@@ -28,7 +28,7 @@ graph LR
 | TX: clocks per bit period | 50,000,000 / 115,200 | ≈ 434 → `TX_CLK_LIMIT` |
 | RX: clocks per oversample tick | 434 / 16 | ≈ 27 → `RX_CLK_LIMIT` |
 
-> **Note:** 434/16 = 27.125, not a whole number — `RX_CLK_LIMIT` is rounded to 27. This introduces a small timing drift (~7 clocks accumulated by the last data bit), which is tolerated because RX samples at the *midpoint* of each bit, giving enough margin to absorb it.
+> **Note:** 434/16 = 27.125, not a whole number — `RX_CLK_LIMIT` is rounded to 27. This introduces a small timing drift (~7 clocks accumulated by the last data bit), which is tolerated because RX samples at the midpoint of each bit, giving enough margin to absorb it.
 
 ### Parameters
 
@@ -55,4 +55,5 @@ graph LR
 **Timing:** `bit_tick` is a pulse generated once every `TX_CLK_LIMIT` (434) clock cycles — i.e., once per bit period at 115200 baud. Since TX is the source of the signal it's generating, it doesn't need to measure or interpret anything external — `bit_tick` firing is simply "time to move to the next bit/state," and the FSM advances directly on that pulse.
 
 **`tx_busy`:** Asserted whenever the FSM is in `STATE_START`, `STATE_DATA`, or `STATE_STOP` — i.e., whenever a transmission is actively in progress, letting external logic know not to assert `tx_start` again until the current byte finishes.
+
 ​
