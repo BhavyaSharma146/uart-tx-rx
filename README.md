@@ -56,4 +56,6 @@ graph LR
 
 **`tx_busy`:** Asserted whenever the FSM is in `STATE_START`, `STATE_DATA`, or `STATE_STOP` — i.e., whenever a transmission is actively in progress, letting external logic know not to assert `tx_start` again until the current byte finishes.
 
+### Receiver (`uart_rx`)
+
 ​
