@@ -58,7 +58,7 @@ graph LR
 
 Here you go — matching style:
 
-Receiver (`uart_rx`)
+### Receiver (`uart_rx`)
 
 Trigger: Unlike the transmitter, the receiver has no advance notice that a byte is coming — it continuously watches `rx_serial` while in `STATE_IDLE`. The instant the line drops low, it resets `tick_count` to 0 and moves to `STATE_START`. This check is combinational, not gated by `sample_tick`, so the FSM reacts on the very cycle the line goes low.
 
